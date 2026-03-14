@@ -1,12 +1,13 @@
 import { Component, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { ResumeParsingLoaderComponent } from '../../shared/components/resume-parsing-loader/resume-parsing-loader.component';
 
-type UploadState = 'idle' | 'hovering' | 'selected' | 'error';
+type UploadState = 'idle' | 'hovering' | 'selected' | 'error' | 'parsing';
 
 @Component({
   selector: 'app-upload-resume',
   standalone: true,
-  imports: [],
+  imports: [ResumeParsingLoaderComponent],
   templateUrl: './upload-resume.component.html',
   styleUrls: ['./upload-resume.component.css'],
 })
@@ -91,14 +92,26 @@ export class UploadResumeComponent {
 
   onContinue(): void {
     if (!this.selectedFile()) return;
-    // TODO: pass file to ResumeService, then navigate to /validate
-    console.log('Proceeding with file:', this.selectedFile()?.name);
-    // this.router.navigate(['/validate']);
+    // Switch to parsing state — shows the loader
+    this.uploadState.set('parsing');
+  }
+
+  /** Called by the loader component when parsing is complete */
+  onParsingComplete(): void {
+    // TODO: loader will emit the parsed resume from the backend here
+    this.router.navigate(['/validate']);
   }
 
   onBack(): void {
+    if (this.uploadState() === 'parsing') {
+      // Cancel mid-parse — return to selected state
+      this.uploadState.set('selected');
+      return;
+    }
     this.router.navigate(['/']);
   }
+
+  isParsing = computed(() => this.uploadState() === 'parsing');
 
   triggerFileInput(input: HTMLInputElement): void {
     input.click();

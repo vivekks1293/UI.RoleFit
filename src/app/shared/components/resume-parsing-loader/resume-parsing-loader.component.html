@@ -1,0 +1,50 @@
+<div class="loader" [class.loader--exiting]="isExiting()">
+
+  <!-- File pill -->
+  <div class="loader__file">
+    <div class="loader__file-icon" [class.loader__file-icon--pdf]="fileType() === 'PDF'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+    </div>
+    <div class="loader__file-info">
+      <span class="loader__file-name">{{ fileName() }}</span>
+      <span class="loader__file-badge">{{ fileType() }}</span>
+    </div>
+  </div>
+
+  <!-- Progress bar + step label -->
+  <div class="loader__progress-block">
+    <div class="loader__step-label">{{ currentStep() }}</div>
+    <div class="loader__progress-track" role="progressbar" [attr.aria-valuenow]="progressPercent()" aria-valuemin="0" aria-valuemax="100">
+      <div class="loader__progress-fill" [style.width.%]="progressPercent()"></div>
+    </div>
+    <div class="loader__progress-pct">{{ progressPercent() | number:'1.0-0' }}%</div>
+  </div>
+
+  <!-- Fact card -->
+  <div class="loader__fact">
+    <div class="loader__fact-label">Did you know?</div>
+    <div class="loader__fact-content">
+      <p class="loader__fact-headline">{{ currentFact().headline }}</p>
+      <p class="loader__fact-detail">{{ currentFact().detail }}</p>
+    </div>
+  </div>
+
+  <!-- Dot navigation -->
+  <div class="loader__dots" role="tablist" aria-label="Resume facts">
+    @for (fact of facts; track $index) {
+      <button
+        class="loader__dot"
+        [class.loader__dot--active]="currentFactIndex() === $index"
+        (click)="selectFact($index)"
+        [attr.aria-selected]="currentFactIndex() === $index"
+        role="tab"
+        [attr.aria-label]="'Fact ' + ($index + 1)"
+        type="button"
+      ></button>
+    }
+  </div>
+
+</div>
