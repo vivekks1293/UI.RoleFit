@@ -1,0 +1,39 @@
+<header class="header">
+  <div class="header__inner">
+
+    <!-- Logo -->
+    <a class="header__logo" routerLink="/" aria-label="RoleFit home">
+      <span class="header__logo-mark">RF</span>
+      <span class="header__logo-text">RoleFit</span>
+    </a>
+
+    <!-- Nav placeholder -->
+    <nav class="header__nav" aria-label="Main navigation">
+      <a
+        class="header__nav-link"
+        routerLink="/"
+        routerLinkActive="header__nav-link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a>
+      <a
+        class="header__nav-link"
+        routerLink="/upload-resume"
+        routerLinkActive="header__nav-link--active"
+      >Upload Resume</a>
+      <!-- Future nav items will be added here -->
+    </nav>
+
+    <!-- Profile placeholder -->
+    <div class="header__profile">
+      <button class="header__profile-btn" aria-label="Open profile menu">
+        <span class="header__avatar" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+  </div>
+</header>
