@@ -21,6 +21,14 @@ export const routes: Routes = [
         title: 'RoleFit – Upload Resume',
       },
       {
+        path: 'validate',
+        loadComponent: () =>
+          import('./pages/validate/validate.component').then(
+            (m) => m.ValidateComponent
+          ),
+        title: 'RoleFit – Validate Resume',
+      },
+      {
         path: '**',
         redirectTo: '',
       },

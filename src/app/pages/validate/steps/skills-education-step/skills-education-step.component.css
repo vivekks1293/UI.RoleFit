@@ -1,0 +1,82 @@
+@import '../step-shared.css';
+
+.skills-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ── Skill tags ──────────────────────────────────────────────── */
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 36px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-light);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+.skill-tag:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+.skill-tag__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+  width: 14px;
+  height: 14px;
+  transition: color var(--transition);
+}
+
+.skill-tag__remove:hover {
+  color: #ff6b6b;
+}
+
+.skill-input-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.skill-input-row .field__input {
+  flex: 1;
+}
+
+/* ── Education ───────────────────────────────────────────────── */
+.edu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn--sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+.edu-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

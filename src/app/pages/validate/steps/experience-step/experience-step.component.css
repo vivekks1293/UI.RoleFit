@@ -1,0 +1,170 @@
+@import '../step-shared.css';
+
+.step-card__titlerow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── Entry card ──────────────────────────────────────────────── */
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.entry__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.entry__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-light);
+  font-size: 0.72rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+.entry__fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.entry__remove {
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: color var(--transition), background-color var(--transition), border-color var(--transition);
+}
+
+.entry__remove:hover {
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.4);
+  background: rgba(255, 107, 107, 0.06);
+}
+
+/* ── Bullets ─────────────────────────────────────────────────── */
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 2.25rem;
+}
+
+.bullets__label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.1rem;
+}
+
+.bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.bullet__dot {
+  width: 5px;
+  height: 5px;
+  min-width: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-top: 0.7rem;
+}
+
+.bullet__textarea {
+  flex: 1;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  line-height: 1.55;
+  resize: none;
+  outline: none;
+  transition: border-color var(--transition), background-color var(--transition);
+  overflow: hidden;
+  min-height: 38px;
+  field-sizing: content;
+}
+
+.bullet__textarea:focus {
+  border-color: var(--color-accent);
+  background: var(--color-bg);
+}
+
+.bullet__textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.bullet__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  margin-top: 0.45rem;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.bullet__remove:hover {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+}
+
+.bullets__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: 0.3rem 0;
+  transition: color var(--transition);
+  margin-top: 0.1rem;
+}
+
+.bullets__add:hover {
+  color: var(--color-accent);
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1rem;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}

@@ -1,0 +1,142 @@
+<div class="step-card">
+
+  <div class="step-card__titlerow">
+    <div>
+      <h2 class="step-card__title">Work experience</h2>
+      <p class="step-card__subtitle">Edit entries, rewrite bullets, or remove roles that are not relevant.</p>
+    </div>
+    <button class="btn btn--ghost" type="button" (click)="addEntry()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add role
+    </button>
+  </div>
+
+  <!-- Experience entries -->
+  @for (entry of entries(); track entry.id; let i = $index) {
+    <div class="entry" [class]="'entry-' + i">
+
+      <!-- Entry header -->
+      <div class="entry__header">
+        <div class="entry__index">{{ i + 1 }}</div>
+        <div class="entry__fields">
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" [for]="'title-' + i">Job title</label>
+              <input
+                [id]="'title-' + i"
+                class="field__input"
+                type="text"
+                [ngModel]="entry.title"
+                (ngModelChange)="updateField(i, 'title', $event)"
+                placeholder="e.g. Senior Engineer"
+              />
+            </div>
+            <div class="field">
+              <label class="field__label" [for]="'company-' + i">Company</label>
+              <input
+                [id]="'company-' + i"
+                class="field__input"
+                type="text"
+                [ngModel]="entry.company"
+                (ngModelChange)="updateField(i, 'company', $event)"
+                placeholder="e.g. Acme Corp"
+              />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" [for]="'start-' + i">Start date</label>
+              <input
+                [id]="'start-' + i"
+                class="field__input"
+                type="text"
+                [ngModel]="entry.startDate"
+                (ngModelChange)="updateField(i, 'startDate', $event)"
+                placeholder="e.g. Jan 2022"
+              />
+            </div>
+            <div class="field">
+              <label class="field__label" [for]="'end-' + i">End date</label>
+              <input
+                [id]="'end-' + i"
+                class="field__input"
+                type="text"
+                [ngModel]="entry.endDate ?? ''"
+                (ngModelChange)="updateField(i, 'endDate', $event)"
+                placeholder="Present"
+              />
+            </div>
+          </div>
+        </div>
+        <button class="btn btn--icon entry__remove" type="button" (click)="removeEntry(i)" aria-label="Remove this role">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Bullet points -->
+      <div class="bullets">
+        <div class="bullets__label">Bullet points</div>
+
+        @for (bullet of entry.bullets; track $index; let bi = $index) {
+          <div class="bullet">
+            <span class="bullet__dot" aria-hidden="true"></span>
+            <textarea
+              class="bullet__textarea"
+              [ngModel]="bullet"
+              (ngModelChange)="updateBullet(i, bi, $event)"
+              (keydown)="onBulletKeydown($event, i, bi)"
+              rows="2"
+              placeholder="Describe an achievement or responsibility…"
+            ></textarea>
+            @if (entry.bullets.length > 1) {
+              <button class="bullet__remove" type="button" (click)="removeBullet(i, bi)" aria-label="Remove bullet">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            }
+          </div>
+        }
+
+        <button class="bullets__add" type="button" (click)="addBullet(i)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add bullet
+        </button>
+      </div>
+
+    </div>
+
+    @if (i < entries().length - 1) {
+      <div class="section-divider"></div>
+    }
+  }
+
+  @if (entries().length === 0) {
+    <div class="empty-state">
+      <p>No experience entries yet.</p>
+      <button class="btn btn--ghost" type="button" (click)="addEntry()">Add your first role</button>
+    </div>
+  }
+
+  <div class="step-actions">
+    <button class="btn btn--ghost" type="button" (click)="onBack()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </button>
+    <button class="btn btn--primary" type="button" (click)="onNext()">
+      Next — Skills
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
