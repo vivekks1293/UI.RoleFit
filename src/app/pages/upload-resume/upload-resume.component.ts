@@ -1,7 +1,7 @@
 import { Component, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResumeParsingLoaderComponent } from '../../shared/components/resume-parsing-loader/resume-parsing-loader.component';
-
+import { ResumeParserService } from '../../core/services/resume-parser.service';
 type UploadState = 'idle' | 'hovering' | 'selected' | 'error' | 'parsing';
 
 @Component({
@@ -35,7 +35,7 @@ export class UploadResumeComponent {
     return '';
   });
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private resumeParser: ResumeParserService,) {}
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -92,8 +92,17 @@ export class UploadResumeComponent {
 
   onContinue(): void {
     if (!this.selectedFile()) return;
-    // Switch to parsing state — shows the loader
+    const file: any = this.selectedFile();
     this.uploadState.set('parsing');
+    this.resumeParser.parse(file).subscribe({
+      next: (res)=>{
+        console.log("Response is: ", res)
+        alert(res);
+      },
+      error: (err)=>{
+        this.uploadState.set('selected');
+      }
+    })
   }
 
   /** Called by the loader component when parsing is complete */

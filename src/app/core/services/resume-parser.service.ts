@@ -1,34 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BaseResume } from './resume-session.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-/**
- * ResumeParserService
- *
- * Responsible for sending the uploaded file to the Python backend
- * and returning a structured BaseResume object.
- *
- * TODO: Wire up to POST /api/resume/parse once backend is ready.
- */
 @Injectable({ providedIn: 'root' })
 export class ResumeParserService {
 
-  /**
-   * Sends the file to the backend for parsing.
-   * Returns a promise that resolves to a partially-structured BaseResume.
-   */
-  async parse(file: File): Promise<BaseResume> {
+  constructor(private http: HttpClient) {}
+
+  parse(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('/api/resume/parse', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Resume parsing failed: ${response.statusText}`);
-    }
-
-    return response.json() as Promise<BaseResume>;
+    return this.http.post<any>('/api/resume/parse', formData);
   }
 }
