@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ResumeParsingLoaderComponent } from '../../shared/components/resume-parsing-loader/resume-parsing-loader.component';
 import { ResumeParserService } from '../../core/services/resume-parser.service';
 type UploadState = 'idle' | 'hovering' | 'selected' | 'error' | 'parsing';
+import { ResumeSessionService} from '../../core/services/resume-session.service';
 
 @Component({
   selector: 'app-upload-resume',
@@ -35,7 +36,7 @@ export class UploadResumeComponent {
     return '';
   });
 
-  constructor(private router: Router, private resumeParser: ResumeParserService,) {}
+  constructor(private router: Router, private resumeParser: ResumeParserService, private resumeBaseService: ResumeSessionService,) {}
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -94,13 +95,13 @@ export class UploadResumeComponent {
     if (!this.selectedFile()) return;
     const file: any = this.selectedFile();
     this.uploadState.set('parsing');
+    this.resumeBaseService.reset()
     this.resumeParser.parse(file).subscribe({
       next: (res)=>{
-        console.log("Response is: ", res)
-        alert(res);
+        this.resumeBaseService.setBaseResume(res);
       },
       error: (err)=>{
-        this.uploadState.set('selected');
+        this.uploadState.set('error');
       }
     })
   }
