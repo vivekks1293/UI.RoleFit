@@ -1,0 +1,140 @@
+.validate-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem 4rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 2.5rem;
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Page header ─────────────────────────────────────────────── */
+.validate-page__header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.validate-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background-color var(--transition);
+  flex-shrink: 0;
+}
+
+.validate-page__back:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-2);
+}
+
+/* ── Stepper ─────────────────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar { display: none; }
+
+.stepper__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  flex-shrink: 0;
+  transition: opacity var(--transition);
+}
+
+.stepper__step:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.stepper__bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border: 2px solid var(--color-border-light);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  transition: all var(--transition);
+}
+
+.stepper__step--active .stepper__bubble {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.stepper__step--done .stepper__bubble {
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.stepper__label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.stepper__step--active .stepper__label {
+  color: var(--color-text-primary);
+}
+
+.stepper__step--done .stepper__label {
+  color: var(--color-accent);
+}
+
+.stepper__connector {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  min-width: 20px;
+  max-width: 60px;
+  margin-bottom: 1rem;
+  transition: background var(--transition);
+}
+
+.stepper__connector--done {
+  background: var(--color-accent);
+}
+
+/* ── Body ────────────────────────────────────────────────────── */
+.validate-page__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

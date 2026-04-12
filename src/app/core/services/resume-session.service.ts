@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 
-// ─── Data Models ────────────────────────────────────────────────────────────
+// ─── Data Models ─────────────────────────────────────────────────────────────
 
 export interface ContactInfo {
   email: string;
@@ -14,7 +14,7 @@ export interface ExperienceEntry {
   company: string;
   title: string;
   startDate: string;
-  endDate: string | null; // null = present
+  endDate: string | null;
   bullets: string[];
 }
 
@@ -33,18 +33,17 @@ export interface BaseResume {
   skills: string[];
   experience: ExperienceEntry[];
   education: EducationEntry[];
-  /** 0–1 confidence score; lower for PDF-parsed resumes */
   parseConfidence: number;
-  /** Original file reference for display purposes */
   sourceFile: File | null;
 }
 
 export interface JobDescription {
   id: string;
-  title: string;
-  company: string;
-  rawText: string;
-  sourceUrl?: string;
+  label: string;       // e.g. "Google — L5 SWE" — used for resume filename
+  title: string;       // job title
+  company: string;     // company name
+  rawText: string;     // pasted JD text
+  sourceUrl?: string;  // URL (future use)
   addedAt: Date;
 }
 
@@ -54,33 +53,26 @@ export interface TailoredResume {
   generatedAt: Date;
 }
 
-// ─── Service ─────────────────────────────────────────────────────────────────
+// ─── Service ──────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
 export class ResumeSessionService {
-  // ── Raw upload ──────────────────────────────────────────────
-  private _uploadedFile = signal<File | null>(null);
-  readonly uploadedFile = this._uploadedFile.asReadonly();
 
-  // ── Parsed + validated base resume ─────────────────────────
-  private _baseResume = signal<BaseResume | null>(null);
-  readonly baseResume = this._baseResume.asReadonly();
-
-  // ── Job descriptions ────────────────────────────────────────
+  private _uploadedFile    = signal<File | null>(null);
+  private _baseResume      = signal<BaseResume | null>(null);
   private _jobDescriptions = signal<JobDescription[]>([]);
-  readonly jobDescriptions = this._jobDescriptions.asReadonly();
-
-  // ── Tailored variants ───────────────────────────────────────
   private _tailoredResumes = signal<TailoredResume[]>([]);
+
+  readonly uploadedFile    = this._uploadedFile.asReadonly();
+  readonly baseResume      = this._baseResume.asReadonly();
+  readonly jobDescriptions = this._jobDescriptions.asReadonly();
   readonly tailoredResumes = this._tailoredResumes.asReadonly();
 
-  // ── Derived state ───────────────────────────────────────────
-  readonly hasResume = computed(() => this._baseResume() !== null);
+  readonly hasResume  = computed(() => this._baseResume() !== null);
   readonly jobCount   = computed(() => this._jobDescriptions().length);
   readonly isReady    = computed(() => this.hasResume() && this.jobCount() > 0);
 
-  // ── Methods ─────────────────────────────────────────────────
-
+  // ── Resume ────────────────────────────────────────────────────────────────
   setUploadedFile(file: File): void {
     this._uploadedFile.set(file);
   }
@@ -95,23 +87,36 @@ export class ResumeSessionService {
     this._baseResume.set({ ...current, ...partial });
   }
 
+  // ── Job Descriptions ──────────────────────────────────────────────────────
   addJobDescription(job: Omit<JobDescription, 'id' | 'addedAt'>): void {
     const entry: JobDescription = {
       ...job,
       id: crypto.randomUUID(),
       addedAt: new Date(),
     };
-    this._jobDescriptions.update((jobs) => [...jobs, entry]);
+    this._jobDescriptions.update(jobs => [...jobs, entry]);
+  }
+
+  updateJobDescription(id: string, patch: Partial<JobDescription>): void {
+    this._jobDescriptions.update(jobs =>
+      jobs.map(j => j.id === id ? { ...j, ...patch } : j)
+    );
   }
 
   removeJobDescription(id: string): void {
-    this._jobDescriptions.update((jobs) => jobs.filter((j) => j.id !== id));
+    this._jobDescriptions.update(jobs => jobs.filter(j => j.id !== id));
   }
 
+  clearJobDescriptions(): void {
+    this._jobDescriptions.set([]);
+  }
+
+  // ── Tailored Resumes ──────────────────────────────────────────────────────
   addTailoredResume(tailored: TailoredResume): void {
-    this._tailoredResumes.update((list) => [...list, tailored]);
+    this._tailoredResumes.update(list => [...list, tailored]);
   }
 
+  // ── Reset ─────────────────────────────────────────────────────────────────
   reset(): void {
     this._uploadedFile.set(null);
     this._baseResume.set(null);

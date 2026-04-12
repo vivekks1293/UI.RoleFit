@@ -1,0 +1,53 @@
+<div class="step-card">
+
+  <div>
+    <h2 class="step-card__title">Personal information</h2>
+    <p class="step-card__subtitle">Review and correct your basic details.</p>
+  </div>
+
+  <div class="field-group">
+    <div class="field">
+      <label class="field__label" for="name">Full name</label>
+      <input id="name" class="field__input" type="text" [ngModel]="name()" (ngModelChange)="name.set($event)" placeholder="Your full name" />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field__label" for="email">Email</label>
+        <input id="email" class="field__input" type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" placeholder="you@email.com" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="phone">Phone</label>
+        <input id="phone" class="field__input" type="tel" [ngModel]="phone()" (ngModelChange)="phone.set($event)" placeholder="+1 (555) 000-0000" />
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field__label" for="location">Location</label>
+        <input id="location" class="field__input" type="text" [ngModel]="location()" (ngModelChange)="location.set($event)" placeholder="City, State" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="linkedin">LinkedIn</label>
+        <input id="linkedin" class="field__input" type="text" [ngModel]="linkedin()" (ngModelChange)="linkedin.set($event)" placeholder="linkedin.com/in/yourname" />
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="field">
+    <label class="field__label" for="summary">Professional summary</label>
+    <textarea id="summary" class="field__textarea" rows="4" [ngModel]="summary()" (ngModelChange)="summary.set($event)" placeholder="A short paragraph about who you are and what you do…"></textarea>
+  </div>
+
+  <div class="step-actions step-actions--end">
+    <button class="btn btn--primary" type="button" (click)="onNext()">
+      Next — Experience
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+</div>

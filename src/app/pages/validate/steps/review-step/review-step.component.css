@@ -1,0 +1,167 @@
+@import '../step-shared.css';
+
+/* ── Review sections ─────────────────────────────────────────── */
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.review-section__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ── Personal grid ───────────────────────────────────────────── */
+.review-grid {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 0.3rem 1rem;
+}
+
+.review-grid__key {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  padding-top: 0.05rem;
+}
+
+.review-grid__val {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.review-summary {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-2);
+  border-left: 2px solid var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* ── Experience ──────────────────────────────────────────────── */
+.review-exp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.review-exp + .review-exp {
+  margin-top: 1rem;
+}
+
+.review-exp__header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+}
+
+.review-exp__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+}
+
+.review-exp__company {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.review-exp__dates {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-left: auto;
+}
+
+.review-exp__bullets {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.review-exp__bullets li {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.55;
+}
+
+.review-exp__bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* ── Skills ──────────────────────────────────────────────────── */
+.review-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.review-skill-tag {
+  padding: 0.25rem 0.65rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-light);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+/* ── Education ───────────────────────────────────────────────── */
+.review-edu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.review-edu__degree {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.review-edu__institution {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}
+
+/* ── Confirm button ──────────────────────────────────────────── */
+.btn--confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.btn--confirm:hover {
+  background: var(--color-accent-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(92, 255, 228, 0.25);
+}
