@@ -71,14 +71,12 @@ export class ValidateComponent implements OnInit {
   }
 
   goToStep(index: number): void {
-    // Only allow jumping to already-visited steps (index <= current)
     if (index <= this.currentStep()) {
       this.currentStep.set(index);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  // ── Patch helpers (called by child step components via output) ─
   patchPersonal(patch: Partial<BaseResume>): void {
     const current = this.resume();
     if (!current) return;
@@ -112,12 +110,10 @@ export class ValidateComponent implements OnInit {
     this.resume.set({ ...current, education });
   }
 
-  // ── Final confirm ─────────────────────────────────────────────
   onConfirm(): void {
     const final = this.resume();
     if (!final) return;
     this.session.setBaseResume(final);
-    // TODO: navigate to /jobs once that page is built
-    this.router.navigate(['/']);
+    this.router.navigate(['/jobs']);
   }
 }

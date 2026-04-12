@@ -1,0 +1,219 @@
+<section class="jobs-page">
+
+  <!-- Page header -->
+  <div class="jobs-page__header">
+    <button class="jobs-page__back" (click)="onBack()" type="button" aria-label="Go back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </button>
+
+    <!-- Pipeline step indicator -->
+    <div class="jobs-page__steps" aria-label="Pipeline progress">
+      <div class="step step--done">
+        <span class="step__num">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="step__label">Upload</span>
+      </div>
+      <div class="step__connector step__connector--done" aria-hidden="true"></div>
+      <div class="step step--done">
+        <span class="step__num">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="step__label">Validate</span>
+      </div>
+      <div class="step__connector step__connector--done" aria-hidden="true"></div>
+      <div class="step step--active">
+        <span class="step__num">03</span>
+        <span class="step__label">Jobs</span>
+      </div>
+      <div class="step__connector" aria-hidden="true"></div>
+      <div class="step step--upcoming">
+        <span class="step__num">04</span>
+        <span class="step__label">Results</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page title row -->
+  <div class="jobs-page__titlerow">
+    <div>
+      <h1 class="jobs-page__title">Add job descriptions</h1>
+      <p class="jobs-page__subtitle">
+        Add one or more roles. RoleFit will tailor your resume for each one.
+      </p>
+    </div>
+    <button class="btn btn--ghost" type="button" (click)="addForm()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add job
+    </button>
+  </div>
+
+  <!-- Job cards -->
+  <div class="jobs-list">
+    @for (form of forms(); track form.formId; let i = $index) {
+      <div class="job-card" [class.job-card--invalid]="form.touched && !isFormValid(form)">
+
+        <!-- Card header -->
+        <div class="job-card__header">
+          <div class="job-card__num">{{ i + 1 }}</div>
+          <div class="job-card__header-fields">
+
+            <!-- Label — full width -->
+            <div class="field">
+              <label class="field__label" [for]="'label-' + form.formId">
+                Job label
+                <span class="field__required">*</span>
+              </label>
+              <input
+                [id]="'label-' + form.formId"
+                class="field__input field__input--prominent"
+                type="text"
+                [ngModel]="form.label"
+                (ngModelChange)="updateForm(form.formId, 'label', $event)"
+                placeholder="e.g. Google — L5 SWE"
+              />
+              <span class="field__hint">Used to name the tailored resume file</span>
+            </div>
+
+            <!-- Company + Title side by side -->
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label" [for]="'company-' + form.formId">Company</label>
+                <input
+                  [id]="'company-' + form.formId"
+                  class="field__input"
+                  type="text"
+                  [ngModel]="form.company"
+                  (ngModelChange)="updateForm(form.formId, 'company', $event)"
+                  placeholder="e.g. Google"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" [for]="'title-' + form.formId">Job title</label>
+                <input
+                  [id]="'title-' + form.formId"
+                  class="field__input"
+                  type="text"
+                  [ngModel]="form.title"
+                  (ngModelChange)="updateForm(form.formId, 'title', $event)"
+                  placeholder="e.g. Senior Frontend Engineer"
+                />
+              </div>
+            </div>
+
+            <!-- URL — disabled for now -->
+            <div class="field">
+              <label class="field__label" [for]="'url-' + form.formId">
+                Job URL
+                <span class="field__coming-soon">coming soon</span>
+              </label>
+              <input
+                [id]="'url-' + form.formId"
+                class="field__input field__input--disabled"
+                type="url"
+                placeholder="Paste job URL — auto-fetch coming in next version"
+                disabled
+              />
+            </div>
+
+          </div>
+
+          <!-- Remove button -->
+          @if (forms().length > 1) {
+            <button
+              class="job-card__remove"
+              type="button"
+              (click)="removeForm(form.formId)"
+              aria-label="Remove this job"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+            </button>
+          }
+        </div>
+
+        <!-- JD textarea -->
+        <div class="field">
+          <label class="field__label" [for]="'jd-' + form.formId">
+            Job description
+            <span class="field__required">*</span>
+          </label>
+          <textarea
+            [id]="'jd-' + form.formId"
+            class="field__textarea"
+            rows="10"
+            [ngModel]="form.rawText"
+            (ngModelChange)="updateForm(form.formId, 'rawText', $event)"
+            placeholder="Paste the full job description here…"
+          ></textarea>
+          @if (form.rawText.trim().length > 0) {
+            <span class="field__char-count">{{ form.rawText.trim().length }} characters</span>
+          }
+        </div>
+
+        <!-- Validation message -->
+        @if (form.touched && !isFormValid(form)) {
+          <p class="job-card__error" role="alert">
+            Please add a job label and paste the job description.
+          </p>
+        }
+
+      </div>
+    }
+  </div>
+
+  <!-- Add another job — inline button -->
+  <button class="add-more-btn" type="button" (click)="addForm()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Add another job
+  </button>
+
+  <!-- Bottom actions -->
+  <div class="jobs-page__actions">
+    <button class="btn btn--ghost" type="button" (click)="onBack()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </button>
+
+    <div class="jobs-page__submit-group">
+      @if (validCount > 0) {
+        <span class="jobs-page__count">
+          {{ validCount }} job{{ validCount > 1 ? 's' : '' }} ready
+        </span>
+      }
+      <button
+        class="btn btn--primary"
+        type="button"
+        [disabled]="!allValid || isSubmitting()"
+        (click)="onSubmit()"
+      >
+        @if (isSubmitting()) {
+          Saving…
+        } @else {
+          Tailor my resume{{ validCount > 1 ? 's' : '' }}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        }
+      </button>
+    </div>
+  </div>
+
+</section>

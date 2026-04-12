@@ -61,7 +61,6 @@ export class UploadResumeComponent {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (file) this.handleFile(file);
-    // Reset input so same file can be re-selected
     input.value = '';
   }
 
@@ -99,9 +98,13 @@ export class UploadResumeComponent {
     this.resumeParser.parse(file).subscribe({
       next: (res)=>{
         this.resumeBaseService.setBaseResume(res);
+        console.log(res)
       },
       error: (err)=>{
         this.uploadState.set('error');
+      },
+      complete: ()=>{
+        this.resumeBaseService.reset()
       }
     })
   }
@@ -114,7 +117,6 @@ export class UploadResumeComponent {
 
   onBack(): void {
     if (this.uploadState() === 'parsing') {
-      // Cancel mid-parse — return to selected state
       this.uploadState.set('selected');
       return;
     }
