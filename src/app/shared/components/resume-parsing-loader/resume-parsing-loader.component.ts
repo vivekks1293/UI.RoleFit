@@ -6,6 +6,7 @@ import {
   computed,
   input,
   output,
+  Input,
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
@@ -81,6 +82,17 @@ export class ResumeParsingLoaderComponent implements OnInit, OnDestroy {
   // ── Inputs / Outputs ──────────────────────────────────────────────────────
   fileName = input<string>('');
   fileType = input<string>('');
+  resumeParsingStatus!: string;
+  @Input()
+  set parsedStatus(value: string) {
+    this.resumeParsingStatus = value;
+    if(this.resumeParsingStatus === 'completed'){
+      this.completeLoading();
+      return
+    }
+    this.startProgressSimulation();
+  }
+
   /** Emit when parsing is complete so the parent can navigate away */
   parsed = output<void>();
 
@@ -100,7 +112,7 @@ export class ResumeParsingLoaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.startFactRotation();
-    this.startProgressSimulation();
+    // this.startProgressSimulation();
   }
 
   ngOnDestroy(): void {
@@ -138,9 +150,9 @@ export class ResumeParsingLoaderComponent implements OnInit, OnDestroy {
 
     // Simulate completion after totalDuration
     // TODO: Replace with real API call result
-    setTimeout(() => {
-      this.completeLoading();
-    }, totalDuration);
+    // setTimeout(() => {
+    //   this.completeLoading();
+    // }, totalDuration);
   }
 
   private completeLoading(): void {

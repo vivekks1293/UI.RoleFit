@@ -2,7 +2,9 @@ import { Component, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResumeParsingLoaderComponent } from '../../shared/components/resume-parsing-loader/resume-parsing-loader.component';
 import { ResumeParserService } from '../../core/services/resume-parser.service';
+import { ToastService } from '../../core/services/Toast.service';
 type UploadState = 'idle' | 'hovering' | 'selected' | 'error' | 'parsing';
+type ParsingState = 'error' | 'parsing' | 'completed' | 'idle';
 import { ResumeSessionService} from '../../core/services/resume-session.service';
 
 @Component({
@@ -16,6 +18,7 @@ export class UploadResumeComponent {
   uploadState = signal<UploadState>('idle');
   selectedFile = signal<File | null>(null);
   errorMessage = signal<string>('');
+  resumeParsingStatus: ParsingState = "idle"
 
   readonly acceptedTypes = [
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
@@ -36,7 +39,7 @@ export class UploadResumeComponent {
     return '';
   });
 
-  constructor(private router: Router, private resumeParser: ResumeParserService, private resumeBaseService: ResumeSessionService,) {}
+  constructor(private toastService: ToastService, private router: Router, private resumeParser: ResumeParserService, private resumeBaseService: ResumeSessionService,) {}
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -94,17 +97,24 @@ export class UploadResumeComponent {
     if (!this.selectedFile()) return;
     const file: any = this.selectedFile();
     this.uploadState.set('parsing');
-    this.resumeBaseService.reset()
+    this.resumeBaseService.reset();
+    this.resumeParsingStatus = "parsing";
     this.resumeParser.parse(file).subscribe({
       next: (res)=>{
         this.resumeBaseService.setBaseResume(res);
-        console.log(res)
+        this.resumeParsingStatus = "completed";
+        this.toastService.success("Resume Parsing Success", '', 6000)
       },
       error: (err)=>{
         this.uploadState.set('error');
+        this.resumeParsingStatus = "error";
+        this.toastService.error("Resume Parsing Error", "Something went wrong while parsing your resume", 6000)
+        this.router.navigate(['/upload-resume']);
+
       },
       complete: ()=>{
-        this.resumeBaseService.reset()
+        this.router.navigate(['/validate']);
+        // this.resumeBaseService.reset()
       }
     })
   }
@@ -112,7 +122,7 @@ export class UploadResumeComponent {
   /** Called by the loader component when parsing is complete */
   onParsingComplete(): void {
     // TODO: loader will emit the parsed resume from the backend here
-    this.router.navigate(['/validate']);
+    // this.router.navigate(['/validate']);
   }
 
   onBack(): void {

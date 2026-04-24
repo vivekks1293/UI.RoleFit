@@ -2,15 +2,15 @@
   <app-header />
 
   <div class="layout__body">
-    <!-- Sidebar placeholder — will be populated in a future phase -->
     <aside class="sidebar" aria-label="Sidebar navigation">
-      <div class="sidebar__inner">
-        <!-- Future: step navigator, session history, etc. -->
-      </div>
+      <div class="sidebar__inner"></div>
     </aside>
 
     <main class="layout__main" role="main">
       <router-outlet />
     </main>
   </div>
+
+  <!-- Toast outlet — lives outside the scroll container so it's always visible -->
+  <app-toast />
 </div>
