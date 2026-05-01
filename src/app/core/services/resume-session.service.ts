@@ -72,7 +72,6 @@ export class ResumeSessionService {
   readonly jobCount   = computed(() => this._jobDescriptions().length);
   readonly isReady    = computed(() => this.hasResume() && this.jobCount() > 0);
 
-  // ── Resume ────────────────────────────────────────────────────────────────
   setUploadedFile(file: File): void {
     this._uploadedFile.set(file);
   }
@@ -87,7 +86,6 @@ export class ResumeSessionService {
     this._baseResume.set({ ...current, ...partial });
   }
 
-  // ── Job Descriptions ──────────────────────────────────────────────────────
   addJobDescription(job: Omit<JobDescription, 'id' | 'addedAt'>): void {
     const entry: JobDescription = {
       ...job,
@@ -111,12 +109,10 @@ export class ResumeSessionService {
     this._jobDescriptions.set([]);
   }
 
-  // ── Tailored Resumes ──────────────────────────────────────────────────────
   addTailoredResume(tailored: TailoredResume): void {
     this._tailoredResumes.update(list => [...list, tailored]);
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────
   reset(): void {
     this._uploadedFile.set(null);
     this._baseResume.set(null);
