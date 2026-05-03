@@ -68,7 +68,6 @@ export class JobsComponent implements OnInit {
     }
   }
 
-  // ── Form management ───────────────────────────────────────────────────────
 
   addForm(): void {
     this.forms.update(list => [...list, emptyForm()]);
@@ -91,8 +90,6 @@ export class JobsComponent implements OnInit {
     );
   }
 
-  // ── Validation ────────────────────────────────────────────────────────────
-
   isFormValid(form: JobForm): boolean {
     return (
       form.label.trim().length > 0 &&
@@ -108,7 +105,6 @@ export class JobsComponent implements OnInit {
     return this.forms().filter(f => this.isFormValid(f)).length;
   }
 
-  // ── Navigation ────────────────────────────────────────────────────────────
 
   onBack(): void {
     this.router.navigate(['/validate']);
@@ -151,9 +147,8 @@ export class JobsComponent implements OnInit {
     // For now navigate to a placeholder
     this.jobAnalysis.analyse(resume, jobs).subscribe({
       next: (response) => {
-        this.toast.dismiss(loadingId);
-        // Store results in session for results page
-        // this.session.setAnalysisResults(response.results);
+        this.toast.dismiss(loadingId)
+        this.session.setAnalysisResults(response.results);
         this.toast.success('Analysis complete', 'Reviewing your matches now.');
         console.log(response)
         this.router.navigate(['/results']);

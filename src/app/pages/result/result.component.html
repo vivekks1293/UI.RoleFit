@@ -1,0 +1,266 @@
+<section class="results-page">
+
+  <!-- Page header -->
+  <div class="results-page__header">
+    <button class="results-page__back" (click)="onBack()" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </button>
+
+    <!-- Pipeline steps -->
+    <div class="results-page__steps">
+      <div class="step step--done">
+        <span class="step__num">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="step__label">Upload</span>
+      </div>
+      <div class="step__connector step__connector--done"></div>
+      <div class="step step--done">
+        <span class="step__num">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="step__label">Validate</span>
+      </div>
+      <div class="step__connector step__connector--done"></div>
+      <div class="step step--done">
+        <span class="step__num">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="step__label">Jobs</span>
+      </div>
+      <div class="step__connector step__connector--done"></div>
+      <div class="step step--active">
+        <span class="step__num">04</span>
+        <span class="step__label">Results</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="results-page__title-block">
+    <h1 class="results-page__title">Your job matches</h1>
+    <p class="results-page__subtitle">
+      {{ validCount }} job{{ validCount !== 1 ? 's' : '' }} analysed.
+      @if (invalidCount > 0) {
+        <span class="results-page__invalid-note">
+          {{ invalidCount }} invalid job description{{ invalidCount !== 1 ? 's' : '' }} skipped.
+        </span>
+      }
+    </p>
+  </div>
+
+  <!-- Cards -->
+  <div class="results-list">
+
+    @for (card of cards(); track card.jobId) {
+
+      <!-- ── Invalid JD card ─────────────────────────────────── -->
+      @if (!card.isValidJD) {
+        <div class="result-card result-card--invalid">
+          <div class="result-card__invalid-inner">
+
+            <div class="result-card__invalid-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+
+            <div class="result-card__invalid-content">
+              <span class="result-card__invalid-badge">Invalid job description</span>
+              <span class="result-card__invalid-name">{{ card.label }}</span>
+              @if (card.reason) {
+                <span class="result-card__invalid-reason">{{ card.reason }}</span>
+              }
+            </div>
+
+            <!-- Edit button — always visible on invalid cards -->
+            <button class="btn btn--ghost btn--sm" type="button" (click)="onEditJob()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Edit job
+            </button>
+
+          </div>
+        </div>
+      }
+
+      <!-- ── Valid job card ──────────────────────────────────── -->
+      @if (card.isValidJD) {
+        <div
+          class="result-card"
+          [class.result-card--strong]="card.matchLevel === 'strong'"
+          [class.result-card--medium]="card.matchLevel === 'medium'"
+          [class.result-card--weak]="card.matchLevel === 'weak'"
+          [class.result-card--tailored]="card.status === 'tailored'"
+        >
+
+          <!-- Status strip -->
+          <div
+            class="result-card__strip"
+            [style.background]="scoreBg(card.matchLevel)"
+            [style.border-color]="scoreBorder(card.matchLevel)"
+          >
+            <span class="result-card__match-label" [style.color]="scoreColor(card.matchLevel)">
+              {{ matchLabel(card.matchLevel) }}
+            </span>
+
+            <!-- Edit job button — always visible on valid cards -->
+            <button class="btn btn--edit" type="button" (click)="onEditJob()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Edit job
+            </button>
+
+            <!-- Score ring -->
+            <div class="result-card__score-ring" [attr.aria-label]="'Match score ' + card.matchScore + '%'">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" stroke-width="3"/>
+                <circle
+                  cx="22" cy="22" r="18"
+                  fill="none"
+                  [attr.stroke]="scoreColor(card.matchLevel)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-dasharray="113"
+                  [attr.stroke-dashoffset]="113 - (113 * card.matchScore / 100)"
+                  transform="rotate(-90 22 22)"
+                  style="transition: stroke-dashoffset 0.8s ease"
+                />
+              </svg>
+              <span class="result-card__score-num" [style.color]="scoreColor(card.matchLevel)">
+                {{ card.matchScore }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card body -->
+          <div class="result-card__body">
+
+            <!-- Left — job info + analysis -->
+            <div class="result-card__left">
+
+              <div class="result-card__job-info">
+                @if (card.company) {
+                  <span class="result-card__company">{{ card.company }}</span>
+                }
+                @if (card.title) {
+                  <span class="result-card__title">{{ card.title }}</span>
+                }
+                <span class="result-card__label">{{ card.label }}</span>
+              </div>
+
+              @if (card.summary) {
+                <p class="result-card__summary">{{ card.summary }}</p>
+              }
+
+              <!-- Skills grid -->
+              <div class="result-card__skills-grid">
+
+                @if (card.jdSkills.length > 0) {
+                  <div class="skill-section">
+                    <span class="skill-section__label">Role requires</span>
+                    <div class="skill-tags">
+                      @for (skill of card.jdSkills; track skill) {
+                        <span class="skill-tag skill-tag--jd">{{ skill }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                @if (card.yourSkills.length > 0) {
+                  <div class="skill-section">
+                    <span class="skill-section__label">Your skills</span>
+                    <div class="skill-tags">
+                      @for (skill of card.yourSkills; track skill) {
+                        <span class="skill-tag skill-tag--yours">{{ skill }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                @if (card.gaps.length > 0) {
+                  <div class="skill-section">
+                    <span class="skill-section__label skill-section__label--gap">Gaps</span>
+                    <div class="skill-tags">
+                      @for (skill of card.gaps; track skill) {
+                        <span class="skill-tag skill-tag--gap">{{ skill }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+              </div>
+            </div>
+
+            <!-- Right — actions -->
+            <div class="result-card__right">
+
+              <!-- idle — show tailor button -->
+              @if (card.status === 'idle') {
+                <button class="btn btn--tailor" type="button" (click)="onTailor(card)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                  </svg>
+                  Tailor Resume
+                </button>
+              }
+
+              <!-- tailoring — show spinner -->
+              @if (card.status === 'tailoring') {
+                <div class="result-card__spinner">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                  <span>Tailoring…</span>
+                </div>
+              }
+
+              <!-- tailored — show download + verify -->
+              @if (card.status === 'tailored') {
+                <div class="result-card__actions">
+                  <div class="result-card__tailored-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Resume ready
+                  </div>
+                  <button class="btn btn--download" type="button" (click)="onDownload(card)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                    </svg>
+                    Download PDF
+                  </button>
+                  <button class="btn btn--verify" type="button" (click)="onVerifyEdit(card)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Verify &amp; Edit
+                  </button>
+                </div>
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+      }
+
+    }
+
+  </div>
+
+</section>

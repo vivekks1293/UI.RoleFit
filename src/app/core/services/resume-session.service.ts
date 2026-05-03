@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { JobAnalysisResult } from './job.service';
 
-// ─── Data Models ─────────────────────────────────────────────────────────────
 
 export interface ContactInfo {
   email: string;
@@ -58,19 +58,26 @@ export interface TailoredResume {
 @Injectable({ providedIn: 'root' })
 export class ResumeSessionService {
 
-  private _uploadedFile    = signal<File | null>(null);
-  private _baseResume      = signal<BaseResume | null>(null);
+  private _uploadedFile = signal<File | null>(null);
+  private _baseResume = signal<BaseResume | null>(null);
   private _jobDescriptions = signal<JobDescription[]>([]);
   private _tailoredResumes = signal<TailoredResume[]>([]);
 
-  readonly uploadedFile    = this._uploadedFile.asReadonly();
-  readonly baseResume      = this._baseResume.asReadonly();
+  readonly uploadedFile = this._uploadedFile.asReadonly();
+  readonly baseResume = this._baseResume.asReadonly();
   readonly jobDescriptions = this._jobDescriptions.asReadonly();
   readonly tailoredResumes = this._tailoredResumes.asReadonly();
 
-  readonly hasResume  = computed(() => this._baseResume() !== null);
-  readonly jobCount   = computed(() => this._jobDescriptions().length);
-  readonly isReady    = computed(() => this.hasResume() && this.jobCount() > 0);
+  readonly hasResume = computed(() => this._baseResume() !== null);
+  readonly jobCount = computed(() => this._jobDescriptions().length);
+  readonly isReady = computed(() => this.hasResume() && this.jobCount() > 0);
+
+  private _analysisResults = signal<JobAnalysisResult[]>([]);
+  readonly analysisResults = this._analysisResults.asReadonly();
+
+  setAnalysisResults(results: JobAnalysisResult[]): void {
+    this._analysisResults.set(results);
+  }
 
   setUploadedFile(file: File): void {
     this._uploadedFile.set(file);
