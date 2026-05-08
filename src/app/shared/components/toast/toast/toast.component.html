@@ -1,0 +1,57 @@
+<div class="toast-container" aria-live="polite" aria-atomic="false">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast"
+      [class]="'toast toast--' + toast.type"
+      role="alert"
+    >
+      <!-- Icon -->
+      <div class="toast__icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path [attr.d]="iconPath(toast.type)"/>
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="toast__content">
+        <span class="toast__title">{{ toast.title }}</span>
+        @if (toast.message) {
+          <span class="toast__message">{{ toast.message }}</span>
+        }
+      </div>
+
+      <!-- Loading spinner for persistent toasts -->
+      @if (!toast.dismissible) {
+        <div class="toast__spinner" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </div>
+      }
+
+      <!-- Dismiss button -->
+      @if (toast.dismissible) {
+        <button
+          class="toast__close"
+          (click)="dismiss(toast.id)"
+          type="button"
+          aria-label="Dismiss notification"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      }
+
+      <!-- Progress bar for auto-dismiss toasts -->
+      @if (toast.duration > 0) {
+        <div
+          class="toast__progress"
+          [style.animation-duration]="toast.duration + 'ms'"
+        ></div>
+      }
+
+    </div>
+  }
+</div>

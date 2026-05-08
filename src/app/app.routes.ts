@@ -37,6 +37,14 @@ export const routes: Routes = [
         title: 'RoleFit – Add Jobs',
       },
       {
+        path: 'results',
+        loadComponent: () =>
+          import('./pages/result/result.component').then(
+            (m) => m.ResultsComponent
+          ),
+        title: 'RoleFit – Your Results',
+      },
+      {
         path: '**',
         redirectTo: '',
       },

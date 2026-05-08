@@ -5,6 +5,8 @@ import {
   ResumeSessionService,
   JobDescription,
 } from '../../core/services/resume-session.service';
+import { JobAnalysisService } from '../../core/services/job.service';
+import { ToastService } from '../../core/services/Toast.service';
 
 // Local form model — separate from the session model
 // so the user can edit freely before saving
@@ -44,7 +46,9 @@ export class JobsComponent implements OnInit {
   constructor(
     private router: Router,
     private session: ResumeSessionService,
-  ) {}
+    private jobAnalysis: JobAnalysisService,
+    private toast: ToastService,
+  ) { }
 
   ngOnInit(): void {
     // If session already has jobs (user came back), pre-populate
@@ -64,7 +68,6 @@ export class JobsComponent implements OnInit {
     }
   }
 
-  // ── Form management ───────────────────────────────────────────────────────
 
   addForm(): void {
     this.forms.update(list => [...list, emptyForm()]);
@@ -87,8 +90,6 @@ export class JobsComponent implements OnInit {
     );
   }
 
-  // ── Validation ────────────────────────────────────────────────────────────
-
   isFormValid(form: JobForm): boolean {
     return (
       form.label.trim().length > 0 &&
@@ -104,7 +105,6 @@ export class JobsComponent implements OnInit {
     return this.forms().filter(f => this.isFormValid(f)).length;
   }
 
-  // ── Navigation ────────────────────────────────────────────────────────────
 
   onBack(): void {
     this.router.navigate(['/validate']);
@@ -130,8 +130,34 @@ export class JobsComponent implements OnInit {
       }
     });
 
+    const resume = this.session.baseResume();
+    const jobs = this.session.jobDescriptions();
+
+    if (!resume) {
+      this.toast.error('No resume found', 'Please upload and validate your resume first.');
+      this.isSubmitting.set(false);
+      return;
+    }
+
+    const loadingId = this.toast.loading(
+      'Analysing job descriptions…',
+      `Processing ${jobs.length} job${jobs.length > 1 ? 's' : ''}`
+    );
     // TODO: navigate to /results once built
     // For now navigate to a placeholder
-    this.router.navigate(['/results']);
+    this.jobAnalysis.analyse(resume, jobs).subscribe({
+      next: (response) => {
+        this.toast.dismiss(loadingId)
+        this.session.setAnalysisResults(response.results);
+        this.toast.success('Analysis complete', 'Reviewing your matches now.');
+        console.log(response)
+        this.router.navigate(['/results']);
+      },
+      error: (err) => {
+        this.toast.dismiss(loadingId);
+        this.toast.error('Analysis failed', 'Something went wrong. Please try again.');
+        this.isSubmitting.set(false);
+      }
+    });
   }
 }

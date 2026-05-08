@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { JobAnalysisResult } from './job.service';
 
-// ─── Data Models ─────────────────────────────────────────────────────────────
 
 export interface ContactInfo {
   email: string;
@@ -58,21 +58,27 @@ export interface TailoredResume {
 @Injectable({ providedIn: 'root' })
 export class ResumeSessionService {
 
-  private _uploadedFile    = signal<File | null>(null);
-  private _baseResume      = signal<BaseResume | null>(null);
+  private _uploadedFile = signal<File | null>(null);
+  private _baseResume = signal<BaseResume | null>(null);
   private _jobDescriptions = signal<JobDescription[]>([]);
   private _tailoredResumes = signal<TailoredResume[]>([]);
 
-  readonly uploadedFile    = this._uploadedFile.asReadonly();
-  readonly baseResume      = this._baseResume.asReadonly();
+  readonly uploadedFile = this._uploadedFile.asReadonly();
+  readonly baseResume = this._baseResume.asReadonly();
   readonly jobDescriptions = this._jobDescriptions.asReadonly();
   readonly tailoredResumes = this._tailoredResumes.asReadonly();
 
-  readonly hasResume  = computed(() => this._baseResume() !== null);
-  readonly jobCount   = computed(() => this._jobDescriptions().length);
-  readonly isReady    = computed(() => this.hasResume() && this.jobCount() > 0);
+  readonly hasResume = computed(() => this._baseResume() !== null);
+  readonly jobCount = computed(() => this._jobDescriptions().length);
+  readonly isReady = computed(() => this.hasResume() && this.jobCount() > 0);
 
-  // ── Resume ────────────────────────────────────────────────────────────────
+  private _analysisResults = signal<JobAnalysisResult[]>([]);
+  readonly analysisResults = this._analysisResults.asReadonly();
+
+  setAnalysisResults(results: JobAnalysisResult[]): void {
+    this._analysisResults.set(results);
+  }
+
   setUploadedFile(file: File): void {
     this._uploadedFile.set(file);
   }
@@ -87,7 +93,6 @@ export class ResumeSessionService {
     this._baseResume.set({ ...current, ...partial });
   }
 
-  // ── Job Descriptions ──────────────────────────────────────────────────────
   addJobDescription(job: Omit<JobDescription, 'id' | 'addedAt'>): void {
     const entry: JobDescription = {
       ...job,
@@ -111,12 +116,10 @@ export class ResumeSessionService {
     this._jobDescriptions.set([]);
   }
 
-  // ── Tailored Resumes ──────────────────────────────────────────────────────
   addTailoredResume(tailored: TailoredResume): void {
     this._tailoredResumes.update(list => [...list, tailored]);
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────
   reset(): void {
     this._uploadedFile.set(null);
     this._baseResume.set(null);
